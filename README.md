@@ -120,15 +120,53 @@ except OperationalError as e:
 ##### Database Management
  
 1. Create new databases.
+    ```
+    import psycopg2    --import psycopg2 module
+    try:
+        # connect to the database
+        connection = psycopg2.connect (db_name="YourDbName",username="UserName",host="HostName,"port="port",password="password")
+        cursor = connection.cursor() --create an cursor object
+        cursor.execute("create database UserDB")
+    except Exception as error:
+           print(f"Error: {error}")
+    finally:
+         if cursor:
+            cursor.close()
+         if connection:
+            connection.close()
+   ``` 
+ 
+3. Drop existing databases.
+   ```
+   import psycopg2
+
+   #connect to database.
+   try:
+      Db_connection= (
+      db_name="database_name",
+      username="user_name",
+      password="user_password",
+      host="host_name",
+      posrt="port"
+      )
+      # create an cursor to ececute sql command.
+      cursor = db_connection.cursor()
+      #execute sql code to Drop db.
+      cursor.execute("DROP UserDB")
+      print("DB has been Droped Successfully.")
+   except Exception as e:
+      print(f"Error: {e}")
+   finally:
+      if cursor():
+        cursor.close()
+      if Db_connection:
+        db_connection.close()
+   ```
+
+5. Rename databases.
  
  
-2. Drop existing databases.
- 
- 
-3. Rename databases.
- 
- 
-4. Backup and restore databases (e.g., triggering shell commands for pg_dump).
+6. Backup and restore databases (e.g., triggering shell commands for pg_dump).
  
 ---
  
