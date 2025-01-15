@@ -164,9 +164,28 @@ except OperationalError as e:
    ```
 
 5. Rename databases.
- 
- 
-6. Backup and restore databases (e.g., triggering shell commands for pg_dump).
+   ```
+      import psycopg2
+      #Connect to DB.
+      db_connection = (
+            db_name="your_databasename",
+            username="username",
+            password="yourPassword",
+            host="hostname",
+            port="port"
+       )
+       #create an cursor
+       Cu=db_connection.cursor()
+       # execute an sqlcode to Rename DB Name.
+       cu.execute("ALTER DATABASE old_db_name RENAME TO new_Db_Name")
+
+       # close open cursor
+       cu.close()
+       #close open Connection.
+       db_connection.close()
+   ```
+---
+7. Backup and restore databases (e.g., triggering shell commands for pg_dump).
  
 ---
  
