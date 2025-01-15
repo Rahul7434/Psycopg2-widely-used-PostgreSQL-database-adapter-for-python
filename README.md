@@ -186,7 +186,74 @@ except OperationalError as e:
    ```
 ---
 7. Backup and restore databases (e.g., triggering shell commands for pg_dump).
- 
+   ```
+      # psycopg2 module does not directly support backup and restore operation like pg_dump & pg_resotre.
+      # We can use Python "subprocess" module to execute shell cmd.
+      
+      import subprocess #import sbprocess module
+      
+      def backup_database(dbname, user, host, port, password, backup_file):  #create an function with arguments.
+      try:
+         # Construct the pg_dump command
+         command = [
+            'pg_dump',
+            '-h', host,
+            '-p', port,
+            '-U', user,
+            '-F', 'c',  # Custom format
+            '-b',  # Include large objects
+            '-v',  # Verbose mode
+            '-f', backup_file,
+            dbname
+         ]
+
+         # Set the environment variable for the password
+         env = {
+            'PGPASSWORD': password
+         }
+
+         # Execute the command
+         subprocess.run(command, env=env, check=True) 
+         print("Backup completed successfully")
+
+      except subprocess.CalledProcessError as error:
+         print(f"Error: {error}")
+
+      # Example usage 
+      backup_database('YourDbName', 'UserName', 'HostName', '5432', 'password', 'backup_file.dump') # called the function with parameters.
+   ```
+---
+```
+import subprocess
+
+def restore_database(dbname, user, host, port, password, backup_file):
+    try:
+        # Construct the pg_restore command
+        command = [
+            'pg_restore',
+            '-h', host,
+            '-p', port,
+            '-U', user,
+            '-d', dbname,
+            '-v',  # Verbose mode
+            backup_file
+        ]
+
+        # Set the environment variable for the password
+        env = {
+            'PGPASSWORD': password
+        }
+
+        # Execute the command
+        subprocess.run(command, env=env, check=True)
+        print("Restore completed successfully")
+
+    except subprocess.CalledProcessError as error:
+        print(f"Error: {error}")
+
+# Example usage
+restore_database('YourDbName', 'UserName', 'HostName', '5432', 'password', 'backup_file.dump')
+```
 ---
  
 ##### Schema Management
